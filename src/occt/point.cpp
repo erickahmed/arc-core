@@ -1,17 +1,20 @@
+#include <TopoDS_Shape.hxx>
+#include <TopoDS_Vertex.hxx>
+#include <TopoDS.hxx>
+#include <BRep_Tool.hxx>
+#include <BRepBuilderAPI_MakeVertex.hxx>
 #include <gp_Pnt.hxx>
 
-Point* make_point(double x, double y, double z) {
-    gp_Pnt* p = new gp_Pnt(x, y, z);
-    return reinterpret_cast<Point*>(p);
+TopoDS_Shape make_point(double x, double y, double z) {
+    gp_Pnt point(x, y, z);
+    return BRepBuilderAPI_MakeVertex(point).Vertex();
 }
 
-void free_point(Point* p) {
-    delete reinterpret_cast<gp_Pnt*>(p);
-}
+void coord_point(const TopoDS_Shape& shape, double* x, double* y, double* z) {
+    TopoDS_Vertex vertex = TopoDS::Vertex(shape);
+    gp_Pnt point = BRep_Tool::Pnt(vertex);
 
-void coord_point(const Point* p, double* x, double* y, double* z) {
-    const gp_Pnt* gp = reinterpret_cast<const gp_Pnt*>(p);
-    *x = gp->X();
-    *y = gp->Y();
-    *z = gp->Z();
+    *x = point.X();
+    *y = point.Y();
+    *z = point.Z();
 }
