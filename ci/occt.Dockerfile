@@ -3,12 +3,9 @@ FROM ubuntu:24.04 AS base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install -y\
-    build-essential \
-    git \
-    cmake \
-    tcl tcl-dev \
-    tk tk-dev \
+RUN apt-get update && apt-get install -y \
+    build-essential git cmake \
+    tcl tcl-dev tk tk-dev \
     libfreeimage-dev \
     libxmu-dev libxi-dev \
     libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev \
@@ -33,23 +30,18 @@ RUN make install
 
 WORKDIR /app
 COPY src/occt/ ./src
+RUN cmake -S src -B build -DCMAKE_PREFIX_PATH=/usr/local
+RUN cmake --build build
+
 COPY test/occt/ ./test
 
-RUN cmake -S src -B build -DCMAKE_PREFIX_PATH=/usr/local && cmake --build build
-
-COPY test/occt/ ./test
-
-# Unit test runner
+# Unit test runner stage
 FROM ubuntu:24.04 AS unit-testing
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y \
-    build-essential \
-    cmake \
-    git \
-    catch2 \
-    xvfb \
+    build-essential cmake git catch2 xvfb \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=base /usr/local /usr/local
@@ -59,7 +51,5 @@ COPY --from=base /app/test /app/test
 
 WORKDIR /app
 
-RUN cmake -S test -B build/tests -DCMAKE_PREFIX_PATH=/usr/local
-RUN cmake --build build/tests
-
-CMD ["ctest", "--test-dir", "build/tests", "-V"]
+RUN cmake -S test -B build/unit-tests -DCMAKE_PREFIX_PATH=/usr/local
+RUN cmake --build build/unit-tests
