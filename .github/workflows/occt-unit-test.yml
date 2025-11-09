@@ -1,9 +1,13 @@
-name: OCCT unit test
-on: [push, pull_request]
+name: OCCT CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
-  build-and-test:
-    name: Build and Run Unit Tests
+  build-wrappers:
+    name: Build OCCT wrappers
     runs-on: ubuntu-latest
 
     steps:
@@ -13,7 +17,7 @@ jobs:
       - name: Make script executable
         run: chmod +x ./ci/scripts/occt.sh
 
-      - name: Build project and run tests
+      - name: Build OCCT and run tests
         run: ./ci/scripts/occt.sh --unit-testing
 
       - name: Summary
