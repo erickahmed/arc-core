@@ -1,0 +1,25 @@
+name: OCCT unit test
+on: [push, pull_request]
+
+jobs:
+  build-and-test:
+    name: Build and Run Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Make script executable
+        run: chmod +x ./ci/scripts/occt.sh
+
+      - name: Build project and run tests
+        run: ./ci/scripts/occt.sh --unit-testing
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "=== CI Summary ==="
+          echo "Build: ${{ steps.build.outcome }}"
+          echo "Tests: ${{ steps.test.outcome }}"
+          echo "=================="
