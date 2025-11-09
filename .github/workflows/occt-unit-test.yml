@@ -2,8 +2,24 @@ name: OCCT CI
 on:
   push:
     branches: [master]
+    paths:
+      - "src/occt/**"
+      - "src/ffi/**"
+      - "test/occt/**"
+      - "test/ffi/**"
+      - "ci/**"
+      - ".github/**"
+      - "./CMakeLists.txt"
   pull_request:
     branches: [master]
+    paths:
+      - "src/occt/**"
+      - "src/ffi/**"
+      - "test/occt/**"
+      - "test/ffi/**"
+      - "ci/**"
+      - ".github/**"
+      - "./CMakeLists.txt"
 
 jobs:
   build-wrappers:
