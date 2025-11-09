@@ -19,5 +19,5 @@ if [ "$RUN_UNIT_TESTS" = true ]; then
     docker build --target unit-testing -f "$DOCKERFILE_PATH" -t "$IMAGE_NAME" "$PROJECT_PATH"
 
     echo "Running unit tests..."
-    docker run --rm "$IMAGE_NAME" ctest --test-dir /app/build/unit-tests -V
+    docker run --rm "$IMAGE_NAME" /app/build/unit-tests/tests
 fi
