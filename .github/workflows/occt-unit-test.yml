@@ -1,7 +1,7 @@
 name: OCCT CI
 on:
   push:
-    branches: [master, dev-occt]
+    branches: [master, dev-occt**]
     paths:
       - "src/occt/**"
       - "src/ffi/**"
