@@ -30,8 +30,8 @@ This software uses **Open CASCADE Technology** (OCCT), which is licensed under t
 > of or is based on facilities provided by the Open CASCADE Technology software.
 
 ### Source Code Availability
-The source code for Open CASCADE version 7.4.0 can be obtained from:
+The source code for Open CASCADE version 7.9.2 can be obtained from:
 - Repository: https://github.com/Open-Cascade-SAS/OCCT.git
-- Commit: `fd47711d682be943f0e0a13d1fb54911b0499c31`
+- Commit: `c5f20409c52bf8f658314d205a0e5d6f0be0969c`
 
 **This software makes use of facilities provided by Open CASCADE Technology.**

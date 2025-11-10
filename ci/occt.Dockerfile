@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
 RUN git clone https://github.com/Open-Cascade-SAS/OCCT.git opencascade
 WORKDIR /opencascade
 RUN rm -rf /opencascade/build && mkdir build
-RUN git checkout V7_4_0 -b dev-branch
+RUN git checkout V7_9_2 -b OCCT-792
 RUN mkdir -p build
 WORKDIR /opencascade/build
 
