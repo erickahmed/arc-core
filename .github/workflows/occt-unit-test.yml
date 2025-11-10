@@ -1,7 +1,7 @@
 name: OCCT CI
 on:
   push:
-    branches: [master]
+    branches: [master, dev-occt]
     paths:
       - "src/occt/**"
       - "src/ffi/**"
@@ -11,7 +11,7 @@ on:
       - ".github/**"
       - "./CMakeLists.txt"
   pull_request:
-    branches: [master]
+    branches: [master, dev-occt]
     paths:
       - "src/occt/**"
       - "src/ffi/**"
@@ -24,7 +24,7 @@ on:
 jobs:
   build-wrappers:
     name: Build OCCT wrappers
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
@@ -35,11 +35,3 @@ jobs:
 
       - name: Build OCCT and run tests
         run: ./ci/scripts/occt.sh --unit-testing
-
-      - name: Summary
-        if: always()
-        run: |
-          echo "=== CI Summary ==="
-          echo "Build: ${{ steps.build.outcome }}"
-          echo "Tests: ${{ steps.test.outcome }}"
-          echo "=================="
