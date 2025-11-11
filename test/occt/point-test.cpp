@@ -6,11 +6,10 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/benchmark/catch_benchmark.hpp>
 #include <catch2/catch_approx.hpp>
-#include <TopoDS_Shape.hxx>
 #include "point.hpp"
 
 TEST_CASE("Test point creation, query and deletion behaviour", "[point]") {
-    auto check_coords = [](const TopoDS_Shape& p, const double expected[3]) {
+    auto check_coords = [](const point_shape_t* p, const double expected[3]) {
         double x, y, z;
         coord_point(p, &x, &y, &z);
         REQUIRE(x == Catch::Approx(expected[0]));
@@ -20,26 +19,30 @@ TEST_CASE("Test point creation, query and deletion behaviour", "[point]") {
 
     SECTION("Accept integer coordinates") {
         double coords[3] = {3, -7, 2};
-        TopoDS_Shape p = make_point(coords[0], coords[1], coords[2]);
+        point_shape_t* p = make_point(coords[0], coords[1], coords[2]);
         check_coords(p, coords);
+        delete_point(p);
     }
 
     SECTION("Accept float coordinates") {
         double coords[3] = {3.2352, 7.124662, -2.5};
-        TopoDS_Shape p = make_point(coords[0], coords[1], coords[2]);
+        point_shape_t* p = make_point(coords[0], coords[1], coords[2]);
         check_coords(p, coords);
+        delete_point(p);
     }
 
     SECTION("XYZ Origin") {
         double coords[3] = {0, 0, 0};
-        TopoDS_Shape p = make_point(coords[0], coords[1], coords[2]);
+        point_shape_t* p = make_point(coords[0], coords[1], coords[2]);
         check_coords(p, coords);
+        delete_point(p);
     }
 
     SECTION("Large magnitude values") {
         double coords[3] = {6.5186415e7, 9.48156654e8, -6.516515e6};
-        TopoDS_Shape p = make_point(coords[0], coords[1], coords[2]);
+        point_shape_t* p = make_point(coords[0], coords[1], coords[2]);
         check_coords(p, coords);
+        delete_point(p);
     }
 
     SECTION("Multiple points") {
@@ -52,8 +55,9 @@ TEST_CASE("Test point creation, query and deletion behaviour", "[point]") {
         };
 
         for (const auto& c : points) {
-            TopoDS_Shape p = make_point(c[0], c[1], c[2]);
+            point_shape_t* p = make_point(c[0], c[1], c[2]);
             check_coords(p, c);
+            delete_point(p);
         }
     }
 
@@ -61,91 +65,108 @@ TEST_CASE("Test point creation, query and deletion behaviour", "[point]") {
         double coords[3] = {std::numeric_limits<double>::max(),
                             std::numeric_limits<double>::lowest(),
                             std::numeric_limits<double>::min()};
-        TopoDS_Shape p = make_point(coords[0], coords[1], coords[2]);
+        point_shape_t* p = make_point(coords[0], coords[1], coords[2]);
         check_coords(p, coords);
+        delete_point(p);
     }
 
     SECTION("NaN and Infinity") {
-        double coords[3] = {std::numeric_limits<double>::quiet_NaN(),
-                            std::numeric_limits<double>::infinity(),
-                            -std::numeric_limits<double>::infinity()};
-        TopoDS_Shape p = make_point(coords[0], coords[1], coords[2]);
+        double coords[3] = {std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::infinity(), -std::numeric_limits<double>::infinity()};
+        point_shape_t* p = make_point(coords[0], coords[1], coords[2]);
         double x, y, z;
         coord_point(p, &x, &y, &z);
-        REQUIRE((std::isnan(x) || std::isinf(x)));
-        REQUIRE((std::isnan(y) || std::isinf(y)));
-        REQUIRE((std::isnan(z) || std::isinf(z)));
+
+        REQUIRE(std::isnan(x));
+        REQUIRE(std::isinf(y));
+        REQUIRE(std::isinf(z));
+        REQUIRE(y > 0);
+        REQUIRE(z < 0);
+
+        delete_point(p);
+    }
+
+    SECTION("Denormal values") {
+        double coords[3] = {std::numeric_limits<double>::denorm_min(),
+                            -std::numeric_limits<double>::denorm_min(),
+                            0.0};
+        point_shape_t* p = make_point(coords[0], coords[1], coords[2]);
+        check_coords(p, coords);
+        delete_point(p);
     }
 
     SECTION("Clear single point") {
-        TopoDS_Shape point = make_point(1.0, 2.0, 3.0);
+        point_shape_t* point = make_point(1.0, 2.0, 3.0);
 
-        REQUIRE_FALSE(point.IsNull());
         double x, y, z;
         coord_point(point, &x, &y, &z);
         REQUIRE(x == Catch::Approx(1.0));
         REQUIRE(y == Catch::Approx(2.0));
         REQUIRE(z == Catch::Approx(3.0));
 
-        clear_point(point);
-
-        REQUIRE(point.IsNull());
+        delete_point(point);
     }
 
     SECTION("Clear multiple points") {
         const int num_points = 5;
-        TopoDS_Shape points[num_points];
+        point_shape_t* points[num_points];
 
         for (int i = 0; i < num_points; ++i) {
             points[i] = make_point(i * 1.0, i * 2.0, i * 3.0);
-            REQUIRE_FALSE(points[i].IsNull());
         }
 
         for (int i = 0; i < num_points; ++i) {
-            clear_point(points[i]);
-            REQUIRE(points[i].IsNull());
+            delete_point(points[i]);
         }
     }
 
     SECTION("Clear already null shape") {
-        TopoDS_Shape null_shape;
-        REQUIRE(null_shape.IsNull());
-
-        clear_point(null_shape);
-        REQUIRE(null_shape.IsNull());
+        point_shape_t* null_shape = nullptr;
+        REQUIRE(null_shape == nullptr);
+        delete_point(null_shape);
     }
 
     SECTION("Memory efficiency - multiple clear calls") {
-        TopoDS_Shape point = make_point(1.0, 1.0, 1.0);
-
         for (int i = 0; i < 100; ++i) {
-            clear_point(point);
-            REQUIRE(point.IsNull());
+            point_shape_t* temp_point = make_point(1.0, 1.0, 1.0);
+            delete_point(temp_point);
         }
+    }
+
+    SECTION("Pointer validity after operations") {
+        point_shape_t* p = make_point(1.0, 2.0, 3.0);
+        REQUIRE(p != nullptr);
+
+        double x, y, z;
+        coord_point(p, &x, &y, &z);
+
+        delete_point(p);
     }
 }
 
 TEST_CASE("Benchmark point operations") {
     SECTION("make_point performance") {
+        point_shape_t* p = nullptr;
         BENCHMARK("create point") {
-            return make_point(1.0, 2.0, 3.0);
+            return p = make_point(1.0, 2.0, 3.0);
         };
+        delete_point(p);
     }
 
     SECTION("coord_point performance") {
-        TopoDS_Shape point = make_point(1.0, 2.0, 3.0);
+        point_shape_t* point = make_point(1.0, 2.0, 3.0);
         double x, y, z;
 
         BENCHMARK("extract coordinates") {
             coord_point(point, &x, &y, &z);
         };
+        delete_point(point);
     }
 
-    SECTION("clear_point performance") {
-        BENCHMARK("create and clear point") {
-            TopoDS_Shape point = make_point(1.0, 2.0, 3.0);
-            clear_point(point);
-            return point.IsNull();
+    SECTION("delete_point performance") {
+        BENCHMARK("create and delete point") {
+            point_shape_t* point = make_point(1.0, 2.0, 3.0);
+            delete_point(point);
+            return point;
         };
     }
 }
