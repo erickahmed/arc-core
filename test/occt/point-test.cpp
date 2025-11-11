@@ -8,7 +8,7 @@
 #include <TopoDS_Shape.hxx>
 #include "point.hpp"
 
-TEST_CASE("make_point and coord_point behavior", "[make_point]") {
+TEST_CASE("make_point and coord_point behavior", "[point]") {
     auto check_coords = [](const TopoDS_Shape& p, const double expected[3]) {
         double x, y, z;
         coord_point(p, &x, &y, &z);
@@ -74,5 +74,54 @@ TEST_CASE("make_point and coord_point behavior", "[make_point]") {
         REQUIRE((std::isnan(x) || std::isinf(x)));
         REQUIRE((std::isnan(y) || std::isinf(y)));
         REQUIRE((std::isnan(z) || std::isinf(z)));
+    }
+}
+
+TEST_CASE("clear_point behavior", "[point]") {
+    SECTION("Clear single point") {
+        TopoDS_Shape point = make_point(1.0, 2.0, 3.0);
+
+        REQUIRE_FALSE(point.IsNull());
+        double x, y, z;
+        coord_point(point, &x, &y, &z);
+        REQUIRE(x == Catch::Approx(1.0));
+        REQUIRE(y == Catch::Approx(2.0));
+        REQUIRE(z == Catch::Approx(3.0));
+
+        clear_point(point);
+
+        REQUIRE(point.IsNull());
+    }
+
+    SECTION("Clear multiple points") {
+        const int num_points = 5;
+        TopoDS_Shape points[num_points];
+
+        for (int i = 0; i < num_points; ++i) {
+            points[i] = make_point(i * 1.0, i * 2.0, i * 3.0);
+            REQUIRE_FALSE(points[i].IsNull());
+        }
+
+        for (int i = 0; i < num_points; ++i) {
+            clear_point(points[i]);
+            REQUIRE(points[i].IsNull());
+        }
+    }
+
+    SECTION("Clear already null shape") {
+        TopoDS_Shape null_shape;
+        REQUIRE(null_shape.IsNull());
+
+        clear_point(null_shape);
+        REQUIRE(null_shape.IsNull());
+    }
+
+    SECTION("Memory efficiency - multiple clear calls") {
+        TopoDS_Shape point = make_point(1.0, 1.0, 1.0);
+
+        for (int i = 0; i < 100; ++i) {
+            clear_point(point);
+            REQUIRE(point.IsNull());
+        }
     }
 }
