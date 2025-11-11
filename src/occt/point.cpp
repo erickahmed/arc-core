@@ -23,3 +23,7 @@ void coord_point(const TopoDS_Shape& shape, double* x, double* y, double* z) {
     *y = point.Y();
     *z = point.Z();
 }
+
+void clear_point(TopoDS_Shape& shape) {
+    shape.Nullify();
+}
