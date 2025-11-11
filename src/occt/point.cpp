@@ -10,20 +10,29 @@
 #include <BRepBuilderAPI_MakeVertex.hxx>
 #include <gp_Pnt.hxx>
 
-TopoDS_Shape make_point(double x, double y, double z) {
-    gp_Pnt point(x, y, z);
-    return BRepBuilderAPI_MakeVertex(point).Vertex();
-}
+struct point_shape_t {
+    TopoDS_Shape shape;
+};
 
-void coord_point(const TopoDS_Shape& shape, double* x, double* y, double* z) {
-    TopoDS_Vertex vertex = TopoDS::Vertex(shape);
-    gp_Pnt point = BRep_Tool::Pnt(vertex);
+extern "C" {
+    point_shape_t* make_point(double x, double y, double z) {
+        point_shape_t* result = new point_shape_t();
+        gp_Pnt point(x, y, z);
+        result->shape = BRepBuilderAPI_MakeVertex(point).Vertex();
+        return result;
+    }
 
-    *x = point.X();
-    *y = point.Y();
-    *z = point.Z();
-}
+    void coord_point(const point_shape_t* shape, double* x, double* y, double* z) {
+        if (!shape || !x || !y || !z) return;
 
-void delete_shape(TopoDS_Shape* shape) {
-    delete shape;
+        TopoDS_Vertex vertex = TopoDS::Vertex(shape->shape);
+        gp_Pnt point = BRep_Tool::Pnt(vertex);
+        *x = point.X();
+        *y = point.Y();
+        *z = point.Z();
+    }
+
+    void delete_point(point_shape_t* shape) {
+        delete shape;
+    }
 }

@@ -8,10 +8,18 @@
 
 #pragma once
 
-#include <gp_Pnt.hxx>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-TopoDS_Shape make_point(double x, double y, double z);
-void coord_point(const TopoDS_Shape& shape, double* x, double* y, double* z);
-void clear_point(TopoDS_Shape& shape);
+typedef struct point_shape point_shape_t;
+
+point_shape_t* make_point(double x, double y, double z);
+void coord_point(const point_shape_t* shape, double* x, double* y, double* z);
+void delete_point(point_shape_t* shape);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
