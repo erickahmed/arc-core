@@ -24,6 +24,6 @@ void coord_point(const TopoDS_Shape& shape, double* x, double* y, double* z) {
     *z = point.Z();
 }
 
-void clear_point(TopoDS_Shape& shape) {
-    shape.Nullify();
+void delete_shape(TopoDS_Shape* shape) {
+    delete shape;
 }
