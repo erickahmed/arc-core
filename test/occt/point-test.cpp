@@ -4,11 +4,12 @@
 */
 
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/benchmark/catch_benchmark.hpp>
 #include <catch2/catch_approx.hpp>
 #include <TopoDS_Shape.hxx>
 #include "point.hpp"
 
-TEST_CASE("make_point and coord_point behavior", "[point]") {
+TEST_CASE("Test point creation, query and deletion behaviour", "[point]") {
     auto check_coords = [](const TopoDS_Shape& p, const double expected[3]) {
         double x, y, z;
         coord_point(p, &x, &y, &z);
@@ -75,9 +76,7 @@ TEST_CASE("make_point and coord_point behavior", "[point]") {
         REQUIRE((std::isnan(y) || std::isinf(y)));
         REQUIRE((std::isnan(z) || std::isinf(z)));
     }
-}
 
-TEST_CASE("clear_point behavior", "[point]") {
     SECTION("Clear single point") {
         TopoDS_Shape point = make_point(1.0, 2.0, 3.0);
 
@@ -123,5 +122,30 @@ TEST_CASE("clear_point behavior", "[point]") {
             clear_point(point);
             REQUIRE(point.IsNull());
         }
+    }
+}
+
+TEST_CASE("Benchmark point operations") {
+    SECTION("make_point performance") {
+        BENCHMARK("create point") {
+            return make_point(1.0, 2.0, 3.0);
+        };
+    }
+
+    SECTION("coord_point performance") {
+        TopoDS_Shape point = make_point(1.0, 2.0, 3.0);
+        double x, y, z;
+
+        BENCHMARK("extract coordinates") {
+            coord_point(point, &x, &y, &z);
+        };
+    }
+
+    SECTION("clear_point performance") {
+        BENCHMARK("create and clear point") {
+            TopoDS_Shape point = make_point(1.0, 2.0, 3.0);
+            clear_point(point);
+            return point.IsNull();
+        };
     }
 }
