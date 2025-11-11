@@ -17,7 +17,7 @@ This project is licensed under the GNU Affero General Public License v3.0 - see 
 
 ## Third-Party Dependencies
 
-This software uses **Open CASCADE Technology** (OCCT), which is licensed under the GNU LGPL version 2.1 with the following exception:
+This software makes use of facilities provided by **Open CASCADE Technology** (OCCT), which is licensed under the GNU LGPL version 2.1 with the following exception:
 
 ### Open CASCADE Exception (version 1.0)
 > The object code (i.e. not a source) form of a "work that uses the Library"
@@ -33,5 +33,3 @@ This software uses **Open CASCADE Technology** (OCCT), which is licensed under t
 The source code for Open CASCADE version 7.9.2 can be obtained from:
 - Repository: https://github.com/Open-Cascade-SAS/OCCT.git
 - Commit: `c5f20409c52bf8f658314d205a0e5d6f0be0969c`
-
-**This software makes use of facilities provided by Open CASCADE Technology.**
