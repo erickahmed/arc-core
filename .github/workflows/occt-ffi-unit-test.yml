@@ -1,0 +1,65 @@
+name: OCCT FFI Unit Tests
+
+on:
+  push:
+    branches: [master, dev-occt**, dev-ffi**]
+    paths:
+      - "src/occt/**"
+      - "src/ffi/**"
+      - "tests/occt/**"
+      - "tests/*.rs"
+      - "ci/occt.Dockerfile"
+      - "ci/scripts/occt.sh"
+      - "ci/ffi.Dockerfile"
+      - "ci/scripts/ffi.sh"
+      - ".github/**"
+      - "./CMakeLists.txt"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "build.rs"
+  pull_request:
+    branches: [master, dev-occt, dev-ffi]
+    paths:
+      - "src/occt/**"
+      - "src/ffi/**"
+      - "tests/occt/**"
+      - "tests/*.rs"
+      - "ci/occt.Dockerfile"
+      - "ci/scripts/occt.sh"
+      - "ci/ffi.Dockerfile"
+      - "ci/scripts/ffi.sh"
+      - ".github/**"
+      - "./CMakeLists.txt"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "build.rs"
+
+jobs:
+  build-occt:
+    name: OCCT
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Make scripts executable
+        run: chmod +x ./ci/scripts/occt.sh
+
+      - name: Build OCCT and run tests in Docker
+        run: ./ci/scripts/occt.sh --unit-testing
+
+  build-ffi:
+    name: FFI
+    runs-on: ubuntu-24.04
+    needs: build-occt
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Make scripts executable
+        run: chmod +x ./ci/scripts/ffi.sh
+
+      - name: Build and test FFI in Docker
+        run: ./ci/scripts/ffi.sh --tests
