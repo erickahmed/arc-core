@@ -18,7 +18,6 @@ mod ffi_point {
     }
 
     // Safe wrapper
-
     pub struct Point {
         ptr: *mut PointShape,
     }
@@ -63,3 +62,5 @@ mod ffi_point {
         }
     }
 }
+
+pub use ffi_point::Point;
