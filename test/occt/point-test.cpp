@@ -98,37 +98,37 @@ TEST_CASE("Test point creation, query and deletion behaviour", "[point]") {
         point_shape_t* point = make_point(1.0, 2.0, 3.0);
 
         double x, y, z;
-        coord_point(point, &x, &y, &z);
+        coord_point(p, &x, &y, &z);
         REQUIRE(x == Catch::Approx(1.0));
         REQUIRE(y == Catch::Approx(2.0));
         REQUIRE(z == Catch::Approx(3.0));
 
-        delete_point(point);
+        delete_point(p);
     }
 
     SECTION("Clear multiple points") {
         const int num_points = 5;
-        point_shape_t* points[num_points];
+        point_shape_t* p[num_points];
 
         for (int i = 0; i < num_points; ++i) {
-            points[i] = make_point(i * 1.0, i * 2.0, i * 3.0);
+            p[i] = make_point(i * 1.0, i * 2.0, i * 3.0);
         }
 
         for (int i = 0; i < num_points; ++i) {
-            delete_point(points[i]);
+            delete_point(p[i]);
         }
     }
 
     SECTION("Clear already null shape") {
-        point_shape_t* null_shape = nullptr;
-        REQUIRE(null_shape == nullptr);
-        delete_point(null_shape);
+        point_shape_t* null_p = nullptr;
+        REQUIRE(null_p == nullptr);
+        delete_point(null_p);
     }
 
     SECTION("Memory efficiency - multiple clear calls") {
         for (int i = 0; i < 100; ++i) {
-            point_shape_t* temp_point = make_point(1.0, 1.0, 1.0);
-            delete_point(temp_point);
+            point_shape_t* tmp_p = make_point(1.0, 1.0, 1.0);
+            delete_point(tmp_p);
         }
     }
 
@@ -147,7 +147,7 @@ TEST_CASE("Benchmark point operations") {
     SECTION("make_point performance") {
         point_shape_t* p = nullptr;
         BENCHMARK("Create point") {
-            return p = make_point(1.0, 2.0, 3.0);
+            return p = makes_point(1.0, 2.0, 3.0);
         };
         delete_point(p);
     }
