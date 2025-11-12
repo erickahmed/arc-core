@@ -53,17 +53,17 @@ mod ffi_point {
         }
 
         pub fn delete(mut self) -> Result<(), &'static str> {
-                unsafe {
-                    if self.ptr.is_null() {
-                        return Err("Error: Attempted to delete null pointer");
-                    }
-                    delete_point(self.ptr);
-
-                    self.ptr = std::ptr::null_mut();
-                    std::mem::forget(self);
+            unsafe {
+                if self.ptr.is_null() {
+                    return Err("Error: Attempted to delete null pointer");
                 }
-                Ok(())
+                delete_point(self.ptr);
+
+                self.ptr = std::ptr::null_mut();
+                std::mem::forget(self);
             }
+            Ok(())
+        }
     }
 
     impl Drop for Point {
@@ -85,3 +85,30 @@ mod ffi_point {
 }
 
 pub use ffi_point::Point;
+
+// Basic tests
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn point_creation() {
+        let p = Point::new(1.0, 2.0, -3.0).expect("Failed to create point");
+        let coords = p.coordinates();
+        assert_eq!(coords, (1.0, 2.0, -3.0));
+    }
+
+    #[test]
+    fn point_query() {
+        let p = Point::new(5.5, 3.15, -0.001).expect("Failed to create point");
+        let coords = p.coordinates();
+        assert_eq!(coords, (5.5, 3.15, -0.001));
+    }
+
+    #[test]
+    fn point_deletion() {
+        let p = Point::new(1.0, 2.0, 3.0).expect("Failed to create point");
+        let result = p.delete();
+        assert!(result.is_ok(), "Deletion should succeed for valid point");
+    }
+}
