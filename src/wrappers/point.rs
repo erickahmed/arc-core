@@ -54,6 +54,12 @@ mod ffi_point {
         }
     }
 
-    unsafe impl Send for Point {}
-    unsafe impl Sync for Point {}
+    // TODO: check if i can mark as thread-safe
+
+    impl std::fmt::Debug for Point {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            let (x, y, z) = self.coordinates();
+            write!(f, "Point({}, {}, {})", x, y, z)
+        }
+    }
 }
