@@ -51,6 +51,19 @@ mod ffi_point {
                 (x, y, z)
             }
         }
+
+        pub fn delete(mut self) -> Result<(), &'static str> {
+                unsafe {
+                    if self.ptr.is_null() {
+                        return Err("Error: Attempted to delete null pointer");
+                    }
+                    delete_point(self.ptr);
+
+                    self.ptr = std::ptr::null_mut();
+                    std::mem::forget(self);
+                }
+                Ok(())
+            }
     }
 
     impl Drop for Point {
