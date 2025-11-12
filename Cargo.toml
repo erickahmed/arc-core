@@ -4,4 +4,8 @@ version = "0.0.2"
 edition = "2024"
 license = "AGPL-3.0-or-later"
 
+[lib]
+name = "arc_core"
+path = "src/lib.rs"
+
 [dependencies]
