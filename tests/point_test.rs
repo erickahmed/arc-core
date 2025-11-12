@@ -3,7 +3,7 @@
     Copyright (C) 2025 Erick Ahmed
 */
 
-use arc_core::wrappers::point::Point;
+use arc_core::ffi::point::Point;
 
 #[test]
 fn point_creation() {

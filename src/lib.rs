@@ -3,6 +3,6 @@
     Copyright (C) 2025 Erick Ahmed
 */
 
-pub mod wrappers {
+pub mod ffi {
     pub mod point;
 }
