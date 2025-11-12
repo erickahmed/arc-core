@@ -146,27 +146,27 @@ TEST_CASE("Test point creation, query and deletion behaviour", "[point]") {
 TEST_CASE("Benchmark point operations") {
     SECTION("make_point performance") {
         point_shape_t* p = nullptr;
-        BENCHMARK("create point") {
+        BENCHMARK("Create point") {
             return p = make_point(1.0, 2.0, 3.0);
         };
         delete_point(p);
     }
 
     SECTION("coord_point performance") {
-        point_shape_t* point = make_point(1.0, 2.0, 3.0);
+        point_shape_t* p = make_point(1.0, 2.0, 3.0);
         double x, y, z;
 
-        BENCHMARK("extract coordinates") {
-            coord_point(point, &x, &y, &z);
+        BENCHMARK("Extract coordinates") {
+            coord_point(p, &x, &y, &z);
         };
-        delete_point(point);
+        delete_point(p);
     }
 
     SECTION("delete_point performance") {
-        BENCHMARK("create and delete point") {
-            point_shape_t* point = make_point(1.0, 2.0, 3.0);
-            delete_point(point);
-            return point;
+        point_shape_t* p = make_point(1.0, 2.0, 3.0);
+        BENCHMARK("Delete point") {
+            delete_point(p);
+            return p;
         };
     }
 }
