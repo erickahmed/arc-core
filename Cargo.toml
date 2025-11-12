@@ -9,3 +9,6 @@ name = "arc_core"
 path = "src/lib.rs"
 
 [dependencies]
+
+[build-dependencies]
+cc = "1.0"
