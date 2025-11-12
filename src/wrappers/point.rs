@@ -1,3 +1,8 @@
+/*
+    SPDX-License-Identifier: AGPL-3.0-or-later
+    Copyright (C) 2025 Erick Ahmed
+*/
+
 mod ffi_point {
     use std::os::raw::c_double;
 
