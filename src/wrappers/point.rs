@@ -23,7 +23,16 @@ extern "C" {
     pub fn delete_point(shape: *mut PointShape);
 }
 
-// Safe wrapper
+    extern "C" {
+        fn make_point(x: c_double, y: c_double, z: c_double) -> *mut PointShape;
+        fn coord_point(
+            shape: *const PointShape,
+            x: *mut c_double,
+            y: *mut c_double,
+            z: *mut c_double,
+        );
+        fn delete_point(shape: *mut PointShape);
+    }
 
 pub struct Point {
     ptr: *mut PointShape,
