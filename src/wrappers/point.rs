@@ -4,6 +4,8 @@
 */
 
 mod ffi_point {
+    //FFI
+
     use std::os::raw::c_double;
 
     #[repr(C)]
@@ -23,6 +25,7 @@ mod ffi_point {
     }
 
     // Safe wrapper
+
     pub struct Point {
         ptr: *mut PointShape,
     }
