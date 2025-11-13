@@ -95,7 +95,7 @@ TEST_CASE("Test point creation, query and deletion behaviour", "[point]") {
     }
 
     SECTION("Clear single point") {
-        point_shape_t* point = make_point(1.0, 2.0, 3.0);
+        point_shape_t* p = make_point(1.0, 2.0, 3.0);
 
         double x, y, z;
         coord_point(p, &x, &y, &z);
