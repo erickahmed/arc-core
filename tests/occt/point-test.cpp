@@ -147,7 +147,7 @@ TEST_CASE("Benchmark point operations") {
     SECTION("make_point performance") {
         point_shape_t* p = nullptr;
         BENCHMARK("Create point") {
-            return p = makes_point(1.0, 2.0, 3.0);
+            return p = make_point(1.0, 2.0, 3.0);
         };
         delete_point(p);
     }
