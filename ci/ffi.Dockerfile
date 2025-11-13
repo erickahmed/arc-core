@@ -1,4 +1,7 @@
-FROM occt-builder:latest AS ffi-base
+FROM occt-build:latest AS occt-local
+FROM ghcr.io/erickahmed/arc-core/occt-build:latest AS occt-ghcr
+FROM occt-local AS occt-selected
+FROM occt-selected AS ffi-base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -26,8 +29,8 @@ RUN apt-get update && apt-get install -y \
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 
-COPY --from=occt-builder:latest /usr/local /usr/local
-COPY --from=occt-builder:latest /app/build /app/occt-build
+COPY --from=occt-selected /usr/local /usr/local
+COPY --from=occt-selected /app/build /app/occt-build
 COPY --from=ffi-base /app /app
 
 WORKDIR /app

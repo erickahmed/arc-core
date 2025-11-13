@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-IMAGE_NAME="occt-builder:latest"
+IMAGE_NAME="occt-build:latest"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_PATH="$(cd "$SCRIPT_DIR/../../" && pwd)"
 DOCKERFILE_PATH="$SCRIPT_DIR/../occt.Dockerfile"

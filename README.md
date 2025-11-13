@@ -13,11 +13,11 @@ by the Free Software Foundation, either version 3 of the License, or
 
 ## License
 
-This project is licensed under the GNU Affero General Public License v3.0 - see [LICENSE.txt](LICENSE.txt) file for details.
+This project is licensed under the [GNU Affero General Public License v3.0](https://spdx.org/licenses/AGPL-3.0-or-later.html) - see [LICENSE.txt](LICENSE.txt) file for details.
 
 ## Third-Party Dependencies
 
-This software makes use of facilities provided by **Open CASCADE Technology** (OCCT), which is licensed under the GNU LGPL version 2.1 with the following exception:
+This software makes use of facilities provided by **Open CASCADE Technology** (OCCT), which is licensed under the [GNU Lesser General Public License v2.1](https://spdx.org/licenses/LGPL-2.1-only.html) with the following exception:
 
 ### Open CASCADE Exception (version 1.0)
 > The object code (i.e. not a source) form of a "work that uses the Library"
