@@ -43,11 +43,28 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Make scripts executable
         run: chmod +x ./ci/scripts/occt.sh
 
       - name: Build OCCT and run tests in Docker
         run: ./ci/scripts/occt.sh --unit-testing
+
+      - name: Tag and push OCCT image
+        if: github.event_name != 'pull_request'
+        run: |
+          docker tag occt-builder:latest ghcr.io/${{ github.repository }}/occt-builder:latest
+          docker push ghcr.io/${{ github.repository }}/occt-builder:latest
 
   build-ffi:
     name: FFI
@@ -58,8 +75,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull OCCT image or build locally
+        run: |
+          docker pull ghcr.io/${{ github.repository }}/occt-builder:latest || ./ci/scripts/occt.sh --build-only
+
       - name: Make scripts executable
         run: chmod +x ./ci/scripts/ffi.sh
 
       - name: Build and test FFI in Docker
         run: ./ci/scripts/ffi.sh --tests
+
+      - name: Tag and push FFI image
+        if: github.event_name != 'pull_request'
+        run: |
+          docker tag ffi-builder:latest ghcr.io/${{ github.repository }}/ffi-builder:latest
+          docker push ghcr.io/${{ github.repository }}/ffi-builder:latest
