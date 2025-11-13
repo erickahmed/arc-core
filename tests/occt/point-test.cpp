@@ -163,10 +163,9 @@ TEST_CASE("Benchmark point operations") {
     }
 
     SECTION("delete_point performance") {
-        point_shape_t* p = make_point(1.0, 2.0, 3.0);
         BENCHMARK("Delete point") {
+            point_shape_t* p = make_point(1.0, 2.0, 3.0);
             delete_point(p);
-            return p;
         };
     }
 }
