@@ -1,3 +1,7 @@
+# Builds Open CASCADE Technology (OCCT) v7.9.2
+# Licensed under LGPL-2.1-only with OCCT Exception v1.0
+# Source: https://github.com/Open-Cascade-SAS/OCCT/tree/c5f20409c52bf8f658314d205a0e5d6f0be0969c
+
 # Base builder
 FROM ubuntu:24.04 AS base
 
@@ -15,7 +19,7 @@ RUN apt-get update && apt-get install -y \
 RUN git clone https://github.com/Open-Cascade-SAS/OCCT.git opencascade
 WORKDIR /opencascade
 RUN rm -rf /opencascade/build && mkdir build
-RUN git checkout V7_4_0 -b dev-branch
+RUN git checkout c5f20409c52bf8f658314d205a0e5d6f0be0969c #Tag V7_9_2
 RUN mkdir -p build
 WORKDIR /opencascade/build
 
