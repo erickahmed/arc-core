@@ -3,7 +3,7 @@
 # Source: https://github.com/Open-Cascade-SAS/OCCT/tree/c5f20409c52bf8f658314d205a0e5d6f0be0969c
 
 # Base builder
-FROM ubuntu:24.04 AS base
+FROM ubuntu:24.04 AS occt-base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -88,10 +88,9 @@ COPY src/occt/ ./src
 RUN cmake -S src -B build -DCMAKE_PREFIX_PATH=/usr/local
 RUN cmake --build build
 
-COPY test/occt/ ./test
+COPY tests/occt/ ./test
 
-# Unit test runner stage
-FROM ubuntu:24.04 AS unit-testing
+FROM ubuntu:24.04 AS occt-unit-testing
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -102,12 +101,10 @@ RUN apt-get update && apt-get install -y \
     xvfb \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=base /usr/local /usr/local
-COPY --from=base /app/build /app/build
-COPY --from=base /app/src /app/src
-COPY --from=base /app/test /app/test
-COPY --from=base /usr/local/include /usr/local/include
-COPY --from=base /usr/local/lib /usr/local/lib
+COPY --from=occt-base /usr/local /usr/local
+COPY --from=occt-base /app/build /app/build
+COPY --from=occt-base /app/src /app/src
+COPY --from=occt-base /app/test /app/test
 
 WORKDIR /app
 
