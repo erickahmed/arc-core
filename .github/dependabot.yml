@@ -8,7 +8,7 @@ updates:
       - "dependencies"
       - "docker"
   - package-ecosystem: "cargo"
-    directory: "/src/ffi"
+    directory: "/"
     schedule:
       interval: "weekly"
     labels:
