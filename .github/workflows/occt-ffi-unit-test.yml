@@ -2,7 +2,7 @@ name: OCCT FFI Unit Tests
 
 on:
   push:
-    branches: [master, dev-occt**, dev-ffi**]
+    branches: [master, dev**]
     paths:
       - "src/occt/**"
       - "src/ffi/**"
