@@ -18,7 +18,7 @@ ENV RUSTFLAGS="-L /usr/local/lib -L /app/build"
 
 RUN cargo build
 
-FROM ubuntu:24.04 AS ffi-unit-testing
+FROM ubuntu:26.04 AS ffi-unit-testing
 
 RUN apt-get update && apt-get install -y \
     build-essential cmake git curl \

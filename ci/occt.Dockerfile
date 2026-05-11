@@ -3,7 +3,7 @@
 # Source: https://github.com/Open-Cascade-SAS/OCCT/tree/c5f20409c52bf8f658314d205a0e5d6f0be0969c
 
 # Base builder
-FROM ubuntu:24.04 AS occt-base
+FROM ubuntu:26.04 AS occt-base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -90,7 +90,7 @@ RUN cmake --build build
 
 COPY tests/occt/ ./test
 
-FROM ubuntu:24.04 AS occt-unit-testing
+FROM ubuntu:26.04 AS occt-unit-testing
 
 ENV DEBIAN_FRONTEND=noninteractive
 
